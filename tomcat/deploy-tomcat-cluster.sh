@@ -39,7 +39,7 @@ query(){
 	read -p "Cluster Name: " clustname
 	read -p "Prefix:[tcat]: " prefix
 	read -p "Scaling Factor:[2] " scalefact
-	read -p "Scaling Type [H]-Horizontal;[V]-Vertical:[V] " scaletype
+	read -p "Scaling Type [H]orizontal;[V]ertical:[V] " scaletype
 	read -p "Starting HTTP Port:[8080] " http_port
 	read -p "Starting AJP Port:[8009] " ajp_port
 	read -p "Starting SHUTDOWN Port:[8005] " shutdown_port
