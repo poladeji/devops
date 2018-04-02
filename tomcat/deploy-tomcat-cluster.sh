@@ -3,20 +3,21 @@
 CENTOS_VERSION="6"
 VERSION=8.5.29
 BASE_VERSION=8
-ARTIFACT_BASE=""
+ARTIFACT_BASE="/tmp"
+#CONF_DIR="${ARTIFACT_BASE}/conf"
 
 mkdirs(){
 	for host in $NODES; do
 
-	   if [ $(lxc list $host | grep -c ) -gt 0 ]; then
+	   if [ $(lxc list | grep ${host} -c ) -gt 0 ]; then
 		  lxc delete $host --force ;
 	   fi
 	done
         if [ -z $ARTIFACT_BASE ]; then
-            ARTIFACT_BASE="."
+            ARTIFACT_BASE=$(pwd)
         fi
-        CONF_DIR=$ARTIFACT_BASE/conf
-    for dir in scripts ssh apps conf; do mkdir -p $ARTIFACT_BASE/$dir; done
+
+        for dir in scripts ssh apps conf; do mkdir -p $ARTIFACT_BASE/$dir; done
 
 }
 
@@ -28,6 +29,12 @@ query(){
 	declare -a AJP_PORT
 	declare -a REDIRECT_PORT
 	declare -a SHUTDOWN_PORT
+
+         CONF_DIR="${ARTIFACT_BASE}/conf"
+         echo "Configuration Directory: ${CONF_DIR} "
+
+         cp conf/* ${CONF_DIR}/
+         cp scripts/* ${ARTIFACT_BASE}/scripts/
 
 	read -p "Cluster Name: " clustname
 	read -p "Prefix:[tcat]: " prefix
@@ -89,6 +96,7 @@ query(){
 generateServerXML(){
 	if [ $scaletype = 'V' ]; then
 
+            echo "Configuration Directory: ${CONF_DIR} "
 		HTTP_PORT[0]=$http_port
 		AJP_PORT[0]=$ajp_port
 		REDIRECT_PORT[0]=$redirect_port
